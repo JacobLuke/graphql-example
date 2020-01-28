@@ -10,6 +10,8 @@ const resolvers = {
     Query: {
         workOrder: (_, args) => findById(WorkOrders, args.id),
         listing: (_, args) => findById(Listings, args.id),
+        listings: (_, args) => Listings.filter(l => !args.statuses || args.statuses.includes(l.status)),
+        workOrders: (_, args) => args.showInactive ? WorkOrders : WorkOrders.filter(wo => wo.status !== "Inactive"),
     },
     WorkOrder: {
         unit: (parent) => findById(Units, parent.unit),

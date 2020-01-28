@@ -68,6 +68,8 @@ type Listing {
 type Query {
     workOrder(id: ID!): WorkOrder!
     listing(id: ID!): Listing!
+    listings(statuses: [ListingStatus!]): [Listing!]!
+    workOrders(showInactive: Boolean): [WorkOrder!]!
 }
 
 schema {
