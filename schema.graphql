@@ -1,0 +1,71 @@
+
+type Unit {
+    id: String!
+    year: String
+    make: String
+    model: String
+    trim: String
+    activeWorkOrder: WorkOrder
+}
+
+enum WorkOrderStatus {
+    Inactive
+    AwaitingAllocation
+    EnteredIntoAuction
+    SoldAwaitingInvoicing
+}
+
+interface Site {
+  id: String!
+}
+
+type PrivateSite implements Site {
+    id: String!
+    displayName: String!
+}
+
+type OpenSite implements Site {
+    id: String!
+}
+
+type Dealership {
+    id: String!
+    name: String!
+}
+
+union Owner = PrivateSite | Dealership
+
+type WorkOrder {
+    id: String!
+    unit: Unit!
+    status: WorkOrderStatus
+    owner: Owner!
+    imageURLs: [String!]!
+    activeListing: Listing
+}
+
+enum ListingStatus {
+    Allocated
+    Live
+    NoSale
+    Sold
+    Cancelled
+}
+
+type Listing {
+    id: String!
+    workOrder: WorkOrder!
+    site: Site!
+    status: ListingStatus!
+    scheduledStart: String
+    scheduledEnd: String
+}
+
+type Query {
+    workOrder(id: String!): WorkOrder!
+    listing(id: String!): Listing!
+}
+
+schema {
+    query: Query
+}
