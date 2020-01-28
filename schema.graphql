@@ -80,6 +80,24 @@ type Query {
     listing: ListingQuery
 }
 
+input ActivePeriod {
+    start: String!
+    end: String!
+}
+
+type ListingMutation {
+  create(
+      workOrder: ID! 
+      site: ID!
+      active: ActivePeriod!
+  ): Listing!
+}
+
+type Mutation {
+    listing: ListingMutation
+}
+
 schema {
     query: Query
+    mutation: Mutation
 }

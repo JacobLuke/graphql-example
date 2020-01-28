@@ -53,7 +53,7 @@ const WorkOrders = [
         id: "W1",
         unit: "U1",
         owner: "D1",
-        status: "EnteredIntoAuction",
+        status: "AwaitingAllocation",
         imageURLs: ["https://example.com/?jpg"],
     },
     {
@@ -67,7 +67,7 @@ const WorkOrders = [
         id: "W3",
         unit: "U2",
         owner: "P2",
-        status: "EnteredIntoAuction",
+        status: "AwaitingAllocation",
         imageURLs: ["https://example.com/?jpg"],
     },
     {
@@ -78,34 +78,9 @@ const WorkOrders = [
         imageURLs: [],
     }
 ];
-
 const Listings = [
     {
         id: "L1",
-        workOrder: "W1",
-        site: "P1",
-        status: "NoSale",
-        scheduledStart: "2020-01-20 00:30:00",
-        scheduledEnd: "2020-01-25 00:30:00",
-    },
-    {
-        id: "L2",
-        workOrder: "W1",
-        site: "O1",
-        status: "Allocated",
-        scheduledStart: "2020-02-20 00:30:00",
-        scheduledEnd: "2020-02-25 00:30:00",
-    },
-    {
-        id: "L3",
-        workOrder: "W3",
-        site: "P2",
-        status: "Live",
-        scheduledStart: "2020-01-01 00:00:00",
-        scheduledEnd: "2020-12-31 23:59:59",
-    },
-    {
-        id: "L4",
         workOrder: "W4",
         status: "Sold",
         site: "O1",

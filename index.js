@@ -11,6 +11,26 @@ const resolvers = {
         id: (_, args) => findById(Listings, args.id),
         search: (_, args) => Listings.filter(l => !args.statuses || args.statuses.includes(l.status)),
     },
+    ListingMutation: {
+        create: (_, args) => {
+            const workOrder = findById(WorkOrders, args.workOrder);
+            if (!workOrder || workOrder.status !== "AwaitingAllocation" || !findById(Sites, args.site)) {
+                throw new TypeError("Invalid Parameters");
+            }
+            workOrder.status = "EnteredIntoAuction";
+            const listing = {
+                id: `L${Listings.length + 1}`,
+                workOrder: args.workOrder,
+                site: args.site,
+                scheduledStart: args.active.start,
+                scheduledEnd: args.active.end,
+                // TODO: determine based on start and end
+                status: "Allocated",
+            }
+            Listings.push(listing);
+            return listing;
+        }
+    },
     WorkOrderQuery: {
         id: (_, args) => findById(WorkOrders, args.id),
         search: (_, args) => args.showInactive ? WorkOrders : WorkOrders.filter(wo => wo.status !== "Inactive"),
@@ -18,6 +38,9 @@ const resolvers = {
     Query: {
         workOrder: () => ({}),
         listing: () => ({})
+    },
+    Mutation: {
+        listing: () => ({}),
     },
     WorkOrder: {
         unit: (parent) => findById(Units, parent.unit),
