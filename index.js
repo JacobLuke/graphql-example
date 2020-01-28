@@ -2,7 +2,7 @@ const { ApolloServer } = require('apollo-server');
 const { parse } = require('graphql');
 const { readFileSync } = require('fs');
 const { findById } = require('./utils');
-const { Units, WorkOrders, Listings } = require('./data');
+const { Dealerships, Sites, Units, WorkOrders, Listings } = require('./data');
 
 const typeDefs = parse(readFileSync('./schema.graphql', 'UTF-8'));
 
@@ -19,14 +19,31 @@ const resolvers = {
             l.status !== "Cancelled" &&
             l.status !== "NotSold"
         ),
+        owner: parent => {
+            const site = Sites.find(s => s.private && parent.owner === s.id);
+            if (site) {
+                return { ...site, $type: "PrivateSite" };
+            }
+            const dealership = findById(Dealerships, parent.owner);
+            return { ...dealership, $type: "Dealership" };
+        }
     },
     Listing: {
         workOrder: (parent) => findById(WorkOrders, parent.workOrder),
+        site: parent => findById(Sites, parent.site),
     },
     Unit: {
         activeWorkOrder: (parent) => WorkOrders.find(w =>
             w.unit === parent.id && w.status !== "Inactive",
         ),
+    },
+    Site: {
+        __resolveType: (site) => {
+            return site.private ? "PrivateSite" : "OpenSite";
+        }
+    },
+    Owner: {
+        __resolveType: (owner) => owner.$type,
     }
 };
 
