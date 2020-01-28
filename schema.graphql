@@ -65,11 +65,19 @@ type Listing {
     scheduledEnd: String
 }
 
+type WorkOrderQuery {
+    id(id: ID!): WorkOrder!
+    search(showInactive: Boolean): [WorkOrder!]!
+}
+
+type ListingQuery {
+    id(id: ID!): Listing!
+    search(statuses: [ListingStatus!]): [Listing!]!
+}
+
 type Query {
-    workOrder(id: ID!): WorkOrder!
-    listing(id: ID!): Listing!
-    listings(statuses: [ListingStatus!]): [Listing!]!
-    workOrders(showInactive: Boolean): [WorkOrder!]!
+    workOrder: WorkOrderQuery
+    listing: ListingQuery
 }
 
 schema {

@@ -7,11 +7,17 @@ const { Dealerships, Sites, Units, WorkOrders, Listings } = require('./data');
 const typeDefs = parse(readFileSync('./schema.graphql', 'UTF-8'));
 
 const resolvers = {
+    ListingQuery: {
+        id: (_, args) => findById(Listings, args.id),
+        search: (_, args) => Listings.filter(l => !args.statuses || args.statuses.includes(l.status)),
+    },
+    WorkOrderQuery: {
+        id: (_, args) => findById(WorkOrders, args.id),
+        search: (_, args) => args.showInactive ? WorkOrders : WorkOrders.filter(wo => wo.status !== "Inactive"),
+    },
     Query: {
-        workOrder: (_, args) => findById(WorkOrders, args.id),
-        listing: (_, args) => findById(Listings, args.id),
-        listings: (_, args) => Listings.filter(l => !args.statuses || args.statuses.includes(l.status)),
-        workOrders: (_, args) => args.showInactive ? WorkOrders : WorkOrders.filter(wo => wo.status !== "Inactive"),
+        workOrder: () => ({}),
+        listing: () => ({})
     },
     WorkOrder: {
         unit: (parent) => findById(Units, parent.unit),
