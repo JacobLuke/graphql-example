@@ -1,6 +1,10 @@
 
+
+# Type Defining unique ID of all objectss
+scalar ID
+
 type Unit {
-    id: String!
+    id: ID!
     year: String
     make: String
     model: String
@@ -16,27 +20,27 @@ enum WorkOrderStatus {
 }
 
 interface Site {
-  id: String!
+  id: ID!
 }
 
 type PrivateSite implements Site {
-    id: String!
+    id: ID!
     displayName: String!
 }
 
 type OpenSite implements Site {
-    id: String!
+    id: ID!
 }
 
 type Dealership {
-    id: String!
+    id: ID!
     name: String!
 }
 
 union Owner = PrivateSite | Dealership
 
 type WorkOrder {
-    id: String!
+    id: ID!
     unit: Unit!
     status: WorkOrderStatus
     owner: Owner!
@@ -53,7 +57,7 @@ enum ListingStatus {
 }
 
 type Listing {
-    id: String!
+    id: ID!
     workOrder: WorkOrder!
     site: Site!
     status: ListingStatus!
@@ -62,8 +66,8 @@ type Listing {
 }
 
 type Query {
-    workOrder(id: String!): WorkOrder!
-    listing(id: String!): Listing!
+    workOrder(id: ID!): WorkOrder!
+    listing(id: ID!): Listing!
 }
 
 schema {

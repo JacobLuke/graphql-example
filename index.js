@@ -1,5 +1,5 @@
 const { ApolloServer } = require('apollo-server');
-const { parse } = require('graphql');
+const { parse, GraphQLScalarType, Kind } = require('graphql');
 const { readFileSync } = require('fs');
 const { findById } = require('./utils');
 const { Dealerships, Sites, Units, WorkOrders, Listings } = require('./data');
@@ -44,7 +44,31 @@ const resolvers = {
     },
     Owner: {
         __resolveType: (owner) => owner.$type,
-    }
+    },
+    ID: new GraphQLScalarType({
+        name: 'ID',
+        parseValue(value) {
+            if (typeof value !== 'string') {
+                throw new TypeError('Invalid type for ID');
+            }
+            if (!/[A-Z]\d+/.test(value)) {
+                throw new Error('Invalid format for ID');
+            }
+            return value;
+        },
+        serialize(value) {
+            return value;
+        },
+        parseLiteral(ast) {
+            if (ast.kind !== Kind.STRING) {
+                throw new TypeError('Invalid type for ID');
+            }
+            if (!/[A-Z]\d+/.test(ast.value)) {
+                throw new Error('Invalid format for ID');
+            }
+            return ast.value;
+        }
+    }),
 };
 
 const server = new ApolloServer({ typeDefs, resolvers });
